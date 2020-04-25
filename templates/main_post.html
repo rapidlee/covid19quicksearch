@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+      <h4 align="center">
+          As of today {{ county }} County has <b>{{ todays_infected }}</b> infected and <b>{{ todays_deaths }}</b> recorded deaths  
+      </h4>
+      <h5 align="center">
+          Are we flattening the curve?
+      </h5>
+      <br>
+      <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Infected</th>
+                <th>Infection Rate<br>by Day</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in full_list %}
+                <tr>
+                    <td>{{ i[0] }}</td>
+                    <td>{{ i[1] }}</td>
+                    <td>{{ i[2] }}%</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <br><br>  
+    {% endblock content %}
