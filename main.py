@@ -15,46 +15,20 @@ def get_data(url):
     raw_datalist = content.splitlines()
     return raw_datalist
 
-def find_county(county, raw_datalist):
+def find_county(county, raw_data_list):
     county_data = []
-    for line in raw_datalist: 
+    for line in raw_data_list: 
         if county in line:
             county_data.append(line)
     return county_data
 
-def latest_date_available(county_data):
-    county_data = county_data[-1].split(',')
-    return county_data[0]
-
-def find_county_by_date(county_data, inputdate):
+def list_by_county(county_data):
+    county_list = []
     for line in county_data:
-        if inputdate in line:
-            today = line
-        else:
-            today = False
-    if today:
-        today = today.split(',')
-    return today
-
-def list_dates(county_data):
-    dates_list = []
-    for line in county_data:
-        str_line = str(line)
-        x = str_line.split(',')
-        dates_list.append(x[0])
-    return dates_list
-
-def list_infections(county_data):    
-    infections_list = []
-    for line in county_data:
-        str_line = str(line)
-        y = str_line.split(',')
-        infections_list.append(y[-2])
-    return infections_list
-
-def show_numbers(dates, infections):
-    numbers = dict(zip(dates, infections))
-    return numbers
+        elements = line.split(',')
+        county_list.append(elements)
+    # print(*test_list, sep='\n')
+    return county_list
 
 def calc_infection_rate(values):
     output = [0.0]
@@ -113,29 +87,21 @@ def main_post():
     # find comma_county and list all iterations
     county_data = find_county(comma_county, raw_data)
 
-    # extract date from county_data for dates / infections iterations
-    dates = list_dates(county_data)
-    infections = list_infections(county_data)
-    
-    # calculate infection rate change from previous day
+    # list of lists results by county
+    full_county_list = list_by_county(county_data)
+
+    dates = [x[0] for x in full_county_list]
+    infections = [x[-2] for x in full_county_list]
     infection_rate = calc_infection_rate(infections)
+    todays_infected = full_county_list[0][-2]
+    todays_deaths = full_county_list[0][-1]
 
-    # most current iteration with stats
-    todays_numbers = find_county_by_date(county_data, latest_date_available(county_data))
-    todays_infected = todays_numbers[-2]
-    todays_deaths = todays_numbers[-1]
-
-    # iterate through date, infections, infection rate) and list it within a list
-    index = 0
-    full_list = []
+    #iterate through date, infections, infection rate) and list it within a list
+    display_list = []
     for i in range(len(dates)):
-        full_list.insert(0, [dates[i], infections[i], infection_rate[i]])
-        index += 1
+        display_list.insert(0, [dates[i], infections[i], infection_rate[i]])
 
-
-    return render_template('main_post.html/', infections=infections, dates=dates, infection_rate=infection_rate, county=county, todays_infected=todays_infected, todays_deaths=todays_deaths, full_list=full_list)
-
-
+    return render_template('main_post.html/', county=county, todays_infected=todays_infected, todays_deaths=todays_deaths, display_list=display_list)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8000, debug=True)
