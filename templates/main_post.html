@@ -15,7 +15,8 @@
             <tr>
                 <th>Date</th>
                 <th>Infected</th>
-                <th>Infection Rate<br>by Day</th>
+                <th>Infections <br>Per Day</th>
+                <th>Infection Rate<br>Per Day</th>
             </tr>
         </thead>
         <tbody>
@@ -23,7 +24,8 @@
                 <tr>
                     <td>{{ i[0] }}</td>
                     <td>{{ i[1] }}</td>
-                    <td>{{ i[2] }}%</td>
+                    <td>{{ i[2] }}</td>
+                    <td>{{ i[3] }}%</td>
                 </tr>
             {% endfor %}
         </tbody>

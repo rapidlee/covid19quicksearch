@@ -34,6 +34,17 @@ def list_by_county(county_data):
     # print(*test_list, sep='\n')
     return county_list
 
+def calc_infections_by_day(infections):
+    int_infections = [int(x) for x in infections]
+    beginning_number = int_infections[0]
+    result = []
+
+    for x in range(len(infections)):
+        diff = int_infections[x] - beginning_number
+        beginning_number = int_infections[x]
+        result.append(diff)
+    return result
+
 def calc_infection_rate(values):
     output = [0.0]
     startpos, endpos = (1, len(values)-1)
@@ -53,7 +64,8 @@ def main():
 
 @app.route('/', methods=['POST'])
 def main_post():
-    duplicate_county = bool
+    # At default there are no duplciates and no need for state search parameter
+    duplicate_county = False
     state = False
 
     # if state_select has a value, POST is coming from duplicates.html
@@ -114,15 +126,13 @@ def main_post():
     # Test for duplicates
     compare_duplicates = [x[2] for x in full_county_list]
     if len(set(compare_duplicates)) != 1:
-        print('We found multple states with the same county name', file=sys.stdout)
         list_of_states = set(compare_duplicates)
         return render_template('duplicates.html/', list_of_states=list_of_states, county=county)
-
-
 
     # assign final numbers
     dates = [x[0] for x in full_county_list]
     infections = [x[-2] for x in full_county_list]
+    infections_by_day = calc_infections_by_day(infections)
     infection_rate = calc_infection_rate(infections)
     todays_infected = full_county_list[-1][-2]
     todays_deaths = full_county_list[-1][-1]
@@ -130,7 +140,7 @@ def main_post():
     #iterate through date, infections, infection rate and list it within a list
     display_list = []
     for i in range(len(dates)):
-        display_list.insert(0, [dates[i], infections[i], infection_rate[i]])
+        display_list.insert(0, [dates[i], infections[i], infections_by_day[i], infection_rate[i]])
 
     return render_template('main_post.html/', county=county, todays_infected=todays_infected, todays_deaths=todays_deaths, display_list=display_list, state=state)
 
