@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+<div align="center">
+    We found {{ county }} in multiple states. Select your state: 
+    <form name="stateform" action="{{ url_for('main_post') }}" method="POST">
+        <select name="state_select" autofocus="autofocus">
+            <option></option>
+            {% for state in list_of_states %}
+                <option>{{ state }}</option>
+            {% endfor %}
+            <input type="hidden" name="county1" value="{{ county }}">
+            <input type="submit" value="Search">
+        </select>
+    </form>
+</div>
+<br><br>
+{% endblock content %}

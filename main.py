@@ -1,4 +1,8 @@
-from flask import Flask, render_template, request
+# Quick stats for local COVID-19 / Coronavirus stats by local county
+# https://github.com/rapidlee/covid19quicksearch
+
+
+from flask import Flask, render_template, request, session
 import requests
 import csv
 import sys
@@ -49,8 +53,18 @@ def main():
 
 @app.route('/', methods=['POST'])
 def main_post():
-    county_input = request.form['county_input']
+    duplicate_county = bool
+    state = False
 
+    # if state_select has a value, POST is coming from duplicates.html
+    if request.form.get('state_select'):
+        duplicate_county = True
+        county_input = request.form['county1']
+        state = request.form['state_select']
+        # search paramter now should include state to identify county appropriately 
+        comma_county_state = ',' + county_input + ',' + state
+    else:
+        county_input = request.form.get('county_input')
     # clean the input
     county_input = county_input.strip()
     county_input = county_input.title()
@@ -66,9 +80,14 @@ def main_post():
     if county_input in cityname_corrections:
         county_input = cityname_corrections[county_input]
 
-    # encapsulate keyword with cammas as markers for complete city name
+    # encapsulate keyword with cammas as markers for complete county name
     county = county_input
-    comma_county = ',' + county_input + ','
+    
+    # test if coming from duplicates.html, if so we change the search parameter to include state
+    if duplicate_county == True:
+        comma_county = comma_county_state
+    else:
+        comma_county = ',' + county_input + ','
 
     # get data from csv
     raw_data = get_data(url)
@@ -86,22 +105,34 @@ def main_post():
 
     # find comma_county and list all iterations
     county_data = find_county(comma_county, raw_data)
-
+    # print(*county_data, file=sys.stdout, sep='\n')
+    
     # list of lists results by county
     full_county_list = list_by_county(county_data)
+    # print(*full_county_list, file=sys.stdout, sep='\n')
 
+    # Test for duplicates
+    compare_duplicates = [x[2] for x in full_county_list]
+    if len(set(compare_duplicates)) != 1:
+        print('We found multple states with the same county name', file=sys.stdout)
+        list_of_states = set(compare_duplicates)
+        return render_template('duplicates.html/', list_of_states=list_of_states, county=county)
+
+
+
+    # assign final numbers
     dates = [x[0] for x in full_county_list]
     infections = [x[-2] for x in full_county_list]
     infection_rate = calc_infection_rate(infections)
-    todays_infected = full_county_list[0][-2]
-    todays_deaths = full_county_list[0][-1]
+    todays_infected = full_county_list[-1][-2]
+    todays_deaths = full_county_list[-1][-1]
 
-    #iterate through date, infections, infection rate) and list it within a list
+    #iterate through date, infections, infection rate and list it within a list
     display_list = []
     for i in range(len(dates)):
         display_list.insert(0, [dates[i], infections[i], infection_rate[i]])
 
-    return render_template('main_post.html/', county=county, todays_infected=todays_infected, todays_deaths=todays_deaths, display_list=display_list)
+    return render_template('main_post.html/', county=county, todays_infected=todays_infected, todays_deaths=todays_deaths, display_list=display_list, state=state)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8000, debug=True)

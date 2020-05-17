@@ -3,7 +3,8 @@
 {% block content %}
     <div class="container">
       <h4 align="center">
-          As of today {{ county }} County has <b>{{ todays_infected }}</b> infected and <b>{{ todays_deaths }}</b> recorded deaths  
+          As of today {{ county }} County {% if state %} of {{ state }} {% endif %} 
+          has <b>{{ todays_infected }}</b> infected and <b>{{ todays_deaths }}</b> recorded deaths  
       </h4>
       <h5 align="center">
           Are we flattening the curve?
