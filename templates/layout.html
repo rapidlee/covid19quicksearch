@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head> 
-    <style>
-        table, th, td {
-          border: 1px solid black;
-          padding: 5px;
-        }
-        h {
-          padding: 10px;
-        }
-    </style>
     <title>COVID-19 Coronavirus Stats by County</title>
+
+    <!-- My CSS definitions --> 
+    <link rel="stylesheet" href="/static/styles.css">
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,26 +14,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
   </head>
   <body>
-    <div class="jumbotron text-center">
-        <h1>COVID-19 - Stats for your County</h1>
-            <h3>Name of County</h3>
-            <p></p>
-            <form method="POST">
-              <input name="county_input" autofocus required>
-              <input type="submit" value="Search">
-          </form>
-    </div>
-
+    {% include 'partials/banner.html' %}
     {% block content %}{% endblock %}
 
+
     
-    <div align="center">
-      Please <a href="https://www.linkedin.com/in/johnnylee0706/">Donate</a> to keep the servers running | Dataset used from <a href="https://github.com/nytimes/covid-19-data">New York Times</a><br>
-      <!-- Created by <a href="https://www.linkedin.com/in/johnnylee0706/">jlee</a> --> 
-        
-        <br><br>
-    </div>
-    
+
     <!-- Default Statcounter code for Covid-19 Stat Page
     https://protean-fabric-274112.wl.r.appspot.com/ -->
     <script type="text/javascript">
@@ -61,5 +42,8 @@
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <div class="footer">
+      <a href="https://ko-fi.com/jleecancode">Support</a> this project | <a href="https://github.com/nytimes/covid-19-data">Source</a> of Dataset
+    </div>
   </body>
 </html>

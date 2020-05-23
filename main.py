@@ -144,5 +144,9 @@ def main_post():
 
     return render_template('main_post.html/', county=county, todays_infected=todays_infected, todays_deaths=todays_deaths, display_list=display_list, state=state)
 
+@app.route('/donate')
+def donate():
+    return render_template('donate.html/')
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8000, debug=True)

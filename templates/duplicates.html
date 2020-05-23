@@ -2,18 +2,26 @@
 
 
 {% block content %}
-<div align="center">
-    We found {{ county }} in multiple states. Select your state: 
+<br><br>
+<div class="jumbotron text-center" style="background-color: white;">
+    <h4>
+    We found <font class="infected">{{ county }} </font> in multiple states. Which state are you in? 
+    </h4>
+    <p></p>
+    <div class="div-wrapper">
     <form name="stateform" action="{{ url_for('main_post') }}" method="POST">
-        <select name="state_select" autofocus="autofocus">
+        <select class="box-shadow" style="border: 2px solid #62AED9; left: 0; width: 236px; height: 40px;" name="state_select">
             <option></option>
             {% for state in list_of_states %}
                 <option>{{ state }}</option>
             {% endfor %}
             <input type="hidden" name="county1" value="{{ county }}">
-            <input type="submit" value="Search">
+            <input class="box-shadow" style="right:0;" type="image" name="submit" value="Select" src="static/img/search_button.svg" widht="88" height="40">
         </select>
     </form>
+    </div>
 </div>
-<br><br>
 {% endblock content %}
+
+
+
